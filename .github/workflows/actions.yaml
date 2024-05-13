@@ -1,7 +1,7 @@
 name: Update Tools
 on:
-  schedule:
-    - cron: 0 2 * * *
+  repository_dispatch:
+    types: [trigger-workflow]
 jobs:
   update-tools:
     if: ${{ github.repository_owner == 'GothenburgBitFactory' }}
