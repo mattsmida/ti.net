@@ -4,7 +4,7 @@ on:
     types: [trigger-workflow]
 jobs:
   update-tools:
-    if: ${{ github.repository_owner == 'GothenburgBitFactory' }}
+    # if: ${{ github.repository_owner == 'GothenburgBitFactory' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
