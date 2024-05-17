@@ -58,7 +58,7 @@
     "owner": [
       "AnWeber"
     ],
-    "rating": 0,
+    "rating": 1,
     "updated": "2023-08-17",
     "url": "https://github.com/AnWeber/vscode-timewarrior"
   },
@@ -107,7 +107,7 @@
       "GothenburgBitFactory"
     ],
     "rating": 4,
-    "updated": "2024-06-11",
+    "updated": "2024-06-17",
     "url": "https://github.com/GothenburgBitFactory/task-timewarrior-hook"
   },
   {
@@ -161,6 +161,7 @@
   {
     "archived": false,
     "description": "Simple bash script to display the active task in timewarrior.",
+    "dormant": true,
     "dormant": true,
     "language": [
       "Shell"
@@ -267,6 +268,7 @@
       "agwells"
     ],
     "rating": 0,
+    "updated": "2024-06-05",
     "updated": "2024-06-05",
     "url": "https://github.com/agwells/timew-scripts"
   },
@@ -619,6 +621,7 @@
       "dereulenspiegel"
     ],
     "rating": 2,
+    "rating": 2,
     "updated": "2023-05-19",
     "url": "https://github.com/dereulenspiegel/timew-jira-sync"
   },
@@ -699,7 +702,7 @@
       "gabor-boros"
     ],
     "rating": 26,
-    "updated": "2024-06-12",
+    "updated": "2024-06-14",
     "url": "https://github.com/gabor-boros/minutes"
   },
   {
@@ -778,7 +781,7 @@
     "owner": [
       "guludo"
     ],
-    "rating": 7,
+    "rating": 8,
     "updated": "2024-04-16",
     "url": "https://github.com/guludo/timewarrior-balance"
   },
@@ -843,6 +846,7 @@
       "lauft"
     ],
     "rating": 24,
+    "updated": "2024-05-29",
     "updated": "2024-05-29",
     "url": "https://github.com/lauft/timew-bashcompletion"
   },
@@ -1116,6 +1120,7 @@
     ],
     "rating": 1,
     "updated": "2024-06-05",
+    "updated": "2024-06-05",
     "url": "https://github.com/pfmephisto/timew-fishcompletion"
   },
   {
@@ -1314,6 +1319,7 @@
     "archived": false,
     "description": "\u23f1\ufe0f Timewarrior report plugin \u23f3 for Timeduty \ud83d\udcc6",
     "dormant": true,
+    "dormant": true,
     "language": [
       "Python"
     ],
@@ -1451,7 +1457,7 @@
       "timewarrior-synchronize"
     ],
     "rating": 20,
-    "updated": "2024-06-05",
+    "updated": "2024-06-15",
     "url": "https://github.com/timewarrior-synchronize/timew-sync-client"
   },
   {
@@ -1466,6 +1472,7 @@
     "owner": [
       "timewarrior-synchronize"
     ],
+    "rating": 38,
     "rating": 38,
     "updated": "2024-05-09",
     "url": "https://github.com/timewarrior-synchronize/timew-sync-server"
@@ -1515,6 +1522,7 @@
       "trev-dev"
     ],
     "rating": 8,
+    "updated": "2024-06-08",
     "updated": "2024-06-08",
     "url": "https://github.com/trev-dev/timew-billable"
   },
