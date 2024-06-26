@@ -2,13 +2,16 @@
 
 let excludeDormant = false;
 let excludeArchived = true;
-let searchTerm = '';
+let searchTerms = [];
 const taskwarrior2Checkbox = document.getElementById('include-taskwarrior2')
 const taskwarrior3Checkbox = document.getElementById('include-taskwarrior3')
 const taskserverCheckbox = document.getElementById('include-taskserver')
 const excludeDormantCheckbox = document.getElementById('exclude-dormant');
 const includeArchivedCheckbox = document.getElementById('include-archived');
 const searchResultMessage = document.getElementById('search-result-message');
+const SEARCH_WAIT_TIME = 400;
+const CHECKB0X_WAIT_TIME = 200;
+const LOADING_MESSAGE = "Loading...";
 let sortedTools = [];
 let owners = new Set();  // owners, languages, categories become arrays.
 let languages = new Set();
@@ -55,7 +58,7 @@ function populateLanguages(sortedTools) {
   for (const tool of sortedTools) {
     for (const toolLanguage of tool.language) languages.add(toolLanguage);
   }
-  return [...languages].sort();
+  return [...languages].sort((a, b) => a.localeCompare(b));
 }
 
 
@@ -65,8 +68,9 @@ function populateOwners(sortedTools) {
   for (const tool of sortedTools) {
     for (const toolOwner of tool.owner) owners.add(toolOwner);
   }
-  return [...owners].sort();
+  return [...owners].sort((a, b) => a.localeCompare(b));
 }
+
 
 /** Given the tools data, return a sorted array of the categories. */
 function populateCategories(sortedTools) {
@@ -75,7 +79,7 @@ function populateCategories(sortedTools) {
   for (const tool of sortedTools) {
     for (const toolCategory of tool.category) categories.add(toolCategory);
   }
-  return [...categories].sort();
+  return [...categories].sort((a, b) => a.localeCompare(b));
 }
 
 
@@ -135,7 +139,7 @@ function fillToolsTable(tools, selectedLanguages, selectedOwners) {
           && categoryMatch
           && (!excludeDormant || !tool.dormant)
           && (!excludeArchived || !tool.archived)
-          && (searchMatch(searchTerm, tool.keywords))
+          && (searchMatch(searchTerms, tool.keywords))
         ) {
             numMatchingTools++;
             $('#tools-table').append(makeTableRow(tool));
@@ -147,12 +151,7 @@ function fillToolsTable(tools, selectedLanguages, selectedOwners) {
 
 /** If searchTerm is in keywords (even as a partial match), return true. */
 function searchMatch(searchTerm, keywords) {
-  for (let word of keywords) {
-    if (word.toLowerCase().includes(searchTerm)) {
-      return true;
-    }
-  }
-  return false;
+  return searchTerm.every(t => keywords.has(t));
 }
 
 
@@ -179,7 +178,7 @@ function makeTableRow(tool) {
             <span class="tooltip-text">Project is intended for Taskwarrior 3</span>
           </span>` +
           `<span style="display: ${includesTS ? 'visible' : 'none'};" class="tooltip">
-            <em class="bi bi-database">&thinsp;</em>
+            <em class="bi bi-database-fill">&thinsp;</em>
             <span class="tooltip-text">Project is intended for Taskserver</span>
           </span>` +
           `<span style="display: ${tool.dormant ? 'visible' : 'none'};" class="tooltip">
@@ -222,6 +221,19 @@ function makeTableRow(tool) {
 }
 
 
+/** Debounce helper function to filter at the right moment, improving UX. */
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(context, args);
+        }, wait);
+    };
+}
+
+
 /** Update the search result message on the DOM. */
 function updateSearchResultMessage(numTools) {
   let message;
@@ -238,15 +250,33 @@ function updateSearchResultMessage(numTools) {
 /** Initialize the form processors. */
 function initFormProcessors() {
   // Form handlers
-  search.addEventListener('keyup', handleSearch);
-  excludeDormantCheckbox.addEventListener('click', handleDormantCheckbox);
-  includeArchivedCheckbox.addEventListener('click', handleArchivedCheckbox);
+  search.addEventListener('keyup', (e) => {
+    searchResultMessage.innerHTML = LOADING_MESSAGE;
+    debouncedHandleSearch(e);
+  });
+  excludeDormantCheckbox.addEventListener('click', (e) => {
+    searchResultMessage.innerHTML = LOADING_MESSAGE;
+    debouncedHandleCategoryCheckbox(e);
+  });
+  includeArchivedCheckbox.addEventListener('click', (e) => {
+    searchResultMessage.innerHTML = LOADING_MESSAGE;
+    debouncedHandleCategoryCheckbox(e);
+  });
   if (useCategories) {
     const categoryFilters = document.getElementsByClassName('search-filter');
     Array.from(categoryFilters).forEach(f => f.style.display = 'block');
-    taskwarrior2Checkbox.addEventListener('click', handleCategoryCheckbox);
-    taskwarrior3Checkbox.addEventListener('click', handleCategoryCheckbox);
-    taskserverCheckbox.addEventListener('click', handleCategoryCheckbox);
+    taskwarrior2Checkbox.addEventListener('click', (e) => {
+      searchResultMessage.innerHTML = LOADING_MESSAGE;
+      debouncedHandleCategoryCheckbox(e);
+    });
+    taskwarrior3Checkbox.addEventListener('click', (e) => {
+      searchResultMessage.innerHTML = LOADING_MESSAGE;
+      debouncedHandleCategoryCheckbox(e);
+    });
+    taskserverCheckbox.addEventListener('click', (e) => {
+      searchResultMessage.innerHTML = LOADING_MESSAGE;
+      debouncedHandleCategoryCheckbox(e);
+    });
   }
 
   // Init multiselect components
@@ -286,10 +316,17 @@ function handleCategoryCheckbox(e) {
   }
   fillToolsTable(sortedTools, selectedLanguages, selectedOwners)
 }
+const debouncedHandleCategoryCheckbox = debounce((e) => {
+  handleCategoryCheckbox(e);
+}, CHECKB0X_WAIT_TIME);
 
 
 /** On search, refill the tools table. */
 function handleSearch(e) {
-  searchTerm =  e.target.value.toLowerCase();
+  searchTerms = e.target.value.toLowerCase().trim().split(' ');
+  if (searchTerms.length === 1 && searchTerms[0] === '') searchTerms = [];
   fillToolsTable(sortedTools, selectedLanguages, selectedOwners);
 }
+const debouncedHandleSearch = debounce((e) => {
+  handleSearch(e);
+}, SEARCH_WAIT_TIME);
