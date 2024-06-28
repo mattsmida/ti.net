@@ -256,11 +256,11 @@ function initFormProcessors() {
   });
   excludeDormantCheckbox.addEventListener('click', (e) => {
     searchResultMessage.innerHTML = LOADING_MESSAGE;
-    debouncedHandleCategoryCheckbox(e);
+    debouncedHandleDormantCheckbox(e);
   });
   includeArchivedCheckbox.addEventListener('click', (e) => {
     searchResultMessage.innerHTML = LOADING_MESSAGE;
-    debouncedHandleCategoryCheckbox(e);
+    debouncedHandleArchivedCheckbox(e);
   });
   if (useCategories) {
     const categoryFilters = document.getElementsByClassName('search-filter');
@@ -297,6 +297,9 @@ function handleArchivedCheckbox() {
   excludeArchived = !excludeArchived;
   fillToolsTable(sortedTools, selectedLanguages, selectedOwners);
 }
+const debouncedHandleArchivedCheckbox = debounce((e) => {
+  handleArchivedCheckbox(e);
+}, CHECKB0X_WAIT_TIME);
 
 
 /** When the dormant checkbox is clicked, refill the tools table. */
@@ -304,6 +307,9 @@ function handleDormantCheckbox() {
   excludeDormant = !excludeDormant;
   fillToolsTable(sortedTools, selectedLanguages, selectedOwners);
 }
+const debouncedHandleDormantCheckbox = debounce((e) => {
+  handleDormantCheckbox(e);
+}, CHECKB0X_WAIT_TIME);
 
 /** When a category checkbox is clicked, toggle that category. */
 function handleCategoryCheckbox(e) {
